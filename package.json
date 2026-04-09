@@ -1,11 +1,13 @@
- "name": "shadow-net-v4-server",
+{
+  "name": "shadow-net-v4-server",
   "version": "1.0.0",
+  "description": "Cerebro EMA 2.0",
   "main": "server.js",
-  "dependencies": {
-    "express": "^4.18.2",
-    "socket.io": "^4.5.4"
-  },
   "scripts": {
     "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.6.1"
   }
 }
