@@ -8,99 +8,115 @@
     
     <style>
         :root { 
-            --neon-green: #0f0; --neon-pink: #ff00ff; --neon-red: #f00; --neon-blue: #0cf;
+            --neon-green: #0f0; --neon-pink: #ff00ff; --neon-blue: #0cf;
             --dark-bg: #050505; --panel-bg: #0d0d0d;
         }
         body { 
             background: var(--dark-bg); color: var(--neon-green); font-family: 'Segoe UI', monospace; 
-            text-align: center; margin: 0; background-image: radial-gradient(circle at center, #001a00 0%, #050505 100%);
+            text-align: center; margin: 0; overflow-x: hidden;
         }
         .header-system { 
-            background: rgba(0,0,0,0.8); padding: 12px; border-bottom: 1px solid var(--neon-blue); 
+            background: rgba(0,0,0,0.9); padding: 12px; border-bottom: 1px solid var(--neon-blue); 
             font-size: 11px; display: flex; justify-content: space-around; color: var(--neon-blue);
         }
-        .radar-container { position: relative; width: 160px; height: 160px; margin: 30px auto; }
+        .radar-container { position: relative; width: 180px; height: 180px; margin: 30px auto; }
         .radar { 
-            border: 1px solid rgba(0, 255, 0, 0.3); border-radius: 50%; width: 100%; height: 100%; 
-            position: relative; background: repeating-radial-gradient(circle, #000 0%, #000 10%, #010 11%);
+            border: 2px solid rgba(0, 255, 0, 0.2); border-radius: 50%; width: 100%; height: 100%; 
+            position: relative; background: radial-gradient(circle, #001a00 0%, #000 70%);
         }
         .radar::after { 
             content: ''; position: absolute; width: 50%; height: 2px; 
             background: linear-gradient(90deg, transparent, var(--neon-green)); 
             left: 50%; top: 50%; transform-origin: left; animation: scan 3s linear infinite; 
         }
-        .nodes-count { font-size: 80px; color: var(--neon-pink); text-shadow: 0 0 30px var(--neon-pink); margin: 0; font-weight: 900; }
-        .label-nodes { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 3px; }
+        .nodes-count { font-size: 90px; color: var(--neon-pink); text-shadow: 0 0 20px var(--neon-pink); margin: 0; font-weight: 900; }
+        .label-nodes { font-size: 14px; color: #888; text-transform: uppercase; letter-spacing: 4px; }
         
         .c2-wrapper { 
             display: none; background: var(--panel-bg); border: 1px solid var(--neon-blue); 
-            margin: 20px auto; width: 95%; max-width: 900px; border-radius: 4px; padding: 20px;
+            margin: 20px auto; width: 90%; max-width: 600px; border-radius: 8px; padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 204, 255, 0.2);
         }
-        input, button { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: var(--neon-green); margin-bottom: 10px; }
-        #soldier-monitor { height: 120px; background: #000; border: 1px solid #1a1a1a; padding: 10px; font-size: 11px; overflow-y: auto; text-align: left; color: var(--neon-pink); }
+        input, button { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: var(--neon-green); margin-bottom: 10px; font-family: monospace; }
+        #soldier-monitor { height: 150px; background: #000; border: 1px solid #1a1a1a; padding: 10px; font-size: 12px; overflow-y: auto; text-align: left; color: var(--neon-pink); }
 
-        @keyframes scan { from { transform: rotate(0deg) translate(-50%, -50%); } to { transform: rotate(360deg) translate(-50%, -50%); } }
+        @keyframes scan { from { transform: rotate(0deg) translate(-0%, -50%); } to { transform: rotate(360deg) translate(-0%, -50%); } }
     </style>
 </head>
 <body>
 
     <div class="header-system">
-        <span>&bull; SHADOW_NET_v4.1 [STABLE]</span>
-        <span id="my-id-display">&bull; CONECTANDO...</span>
+        <span>&bull; SYSTEM: ONLINE</span>
+        <span id="my-id-display">&bull; BUSCANDO RED...</span>
     </div>
 
-    <div class="radar-container"><div class="radar"></div></div>
-    <div class="nodes-count" id="count">0</div>
-    <div class="label-nodes">Nodos Esclavos en Línea</div>
+    <div class="radar-container">
+        <div class="radar"></div>
+    </div>
 
-    <div id="view-public" style="width: 90%; max-width: 800px; margin: auto;">
-        <div style="margin-top: 40px; padding-bottom: 50px;">
-            <input type="password" id="access-key" placeholder="ROOT KEY" style="width:140px; text-align:center;">
-            <button onclick="authAdmin()" style="width:140px; border-color: var(--neon-red); color: var(--neon-red);">LOGIN</button>
-        </div>
+    <div class="nodes-count" id="count">0</div>
+    <div class="label-nodes">Nodos Activos</div>
+
+    <div id="view-public" style="margin-top: 30px;">
+        <input type="password" id="access-key" placeholder="INGRESE ROOT KEY" style="width:180px; text-align:center;">
+        <br>
+        <button onclick="authAdmin()" style="width:180px; border-color: #f00; color: #f00;">ACCEDER C2</button>
     </div>
 
     <div id="view-internal" class="c2-wrapper">
-        <div style="color:var(--neon-blue); margin-bottom:15px;">&gt; PANEL DE CONTROL CENTRAL</div>
+        <div style="color:var(--neon-blue); margin-bottom:15px; font-weight:bold;">[ CENTRAL COMMAND UNIT ]</div>
         <div id="soldier-monitor">>> ESCANEANDO NODOS...</div>
-        <button onclick="location.reload()" style="margin-top:15px;">REFRESCAR CONEXIÓN</button>
+        <button onclick="location.reload()" style="margin-top:15px; border-color:var(--neon-blue);">REINICIAR ESCANEO</button>
     </div>
 
     <script>
-        // 1. CONEXIÓN AL SERVIDOR (Asegúrate que el link sea este)
+        // --- CONFIGURACIÓN DE CONEXIÓN ---
+        // Se añade el "v41" que faltaba en tu código anterior
         const socket = io("https://shadow-net-v41.onrender.com");
         
-        // 2. IDENTIFICACIÓN (Variable corregida)
-        let nid = "BOT-" + Math.floor(Math.random() * 9999);
+        // Generar ID de sesión
+        let nid = "BOT_" + Math.floor(Math.random() * 9000 + 1000);
         document.getElementById("my-id-display").innerText = "• SESIÓN: " + nid;
 
-        // Avisar al servidor que entramos
+        // Al conectar con el servidor
         socket.on('connect', () => {
-            console.log("Conectado al servidor!");
+            console.log("Conexión establecida con el servidor v41");
             socket.emit('node_entry', { id: nid });
         });
 
-        // 3. RECIBIR ACTUALIZACIÓN (Esto cambia el 0 por el 1)
-        socket.on('update_network', (d) => {
-            console.log("Datos recibidos:", d);
-            document.getElementById('count').innerText = d.total;
+        // Escuchar actualizaciones de la red
+        socket.on('update_network', (data) => {
+            console.log("Sincronizando...", data);
             
-            let l = "";
-            if(d.nodes) {
-                d.nodes.slice(-10).forEach(n => {
-                    l += <div>[+] ${n} <span style="color:var(--neon-green); float:right;">ONLINE</span></div>;
+            // Actualizar el número grande
+            document.getElementById('count').innerText = data.total;
+            
+            // Actualizar monitor de soldados
+            let monitorHtml = "";
+            if(data.nodes && data.nodes.length > 0) {
+                data.nodes.forEach(nodeId => {
+                    monitorHtml += <div>[+] ${nodeId} <span style="color:var(--neon-green); float:right;">CONECTADO</span></div>;
                 });
+            } else {
+                monitorHtml = ">> ESPERANDO NODOS...";
             }
-            document.getElementById('soldier-monitor').innerHTML = l;
+            document.getElementById('soldier-monitor').innerHTML = monitorHtml;
+        });
+
+        // Error de conexión
+        socket.on('connect_error', (err) => {
+            console.log("Error de conexión: ", err.message);
         });
 
         function authAdmin() {
-            const k = "killerbean"; 
-            const i = document.getElementById('access-key').value;
-            if (i === k) {
+            const secret = "killerbean"; 
+            const input = document.getElementById('access-key').value;
+            if (input === secret) {
                 document.getElementById('view-internal').style.display = 'block';
                 document.getElementById('view-public').style.display = 'none';
-            } else { alert("ACCESO DENEGADO"); }
+            } else { 
+                alert("ACCESO DENEGADO - CREDENCIALES INVÁLIDAS"); 
+            }
         }
     </script>
 </body>
