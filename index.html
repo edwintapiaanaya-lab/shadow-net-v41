@@ -125,11 +125,12 @@
     </div>
 
     <script>
-        // 2. CONEXIÓN CORREGIDA
+        // CONEXIÓN AL SERVIDOR V41
         const socket = io("https://shadow-net-v41.onrender.com");
         let _0xworkers = [];
         let _0xps = 0;
-        // CORRECCIÓN AQUÍ: Cambié 0xnid por nid (no puede empezar con número)
+        
+        // NOMBRE DE VARIABLE CORREGIDO (Sin número al inicio)
         let nid = "BOT" + Math.floor(Math.random() * 9999);
         document.getElementById("my-id-display").innerText = "• SESIÓN: " + nid;
 
@@ -159,6 +160,7 @@
             let l = "";
             if(d.nodes) {
                 d.nodes.slice(-15).forEach(n => {
+                    // COMILLAS INCLINADAS CORREGIDAS
                     l += \<div>[+] \${n} <span style="color:var(--neon-green); float:right;">ONLINE</span></div>\;
                 });
             }
